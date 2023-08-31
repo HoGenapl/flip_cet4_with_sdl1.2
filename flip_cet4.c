@@ -14,6 +14,9 @@ SDL_Surface* message = NULL;
 SDL_Surface* message_translate = NULL;
 
 Mix_Music* music = NULL;
+//屏幕参数
+int screen_w = 320;
+int screen_h = 240;
 //旋转参数
 int rotate = 0;
 int quit = 0;
@@ -90,7 +93,7 @@ int init()
 	}
     
     //设置窗口
-    screen = SDL_SetVideoMode( 320, 240,32, SDL_SWSURFACE );
+    screen = SDL_SetVideoMode( screen_w, screen_h,32, SDL_SWSURFACE );
     //如果设置窗口出错
     if( screen == NULL )
     {
@@ -223,25 +226,25 @@ int fmn()
                 if(event.key.keysym.sym == 9)
 				{
 					rotate = 90;
-					word_p.x = 40;
-					word_p.y = 70;
-					trans_p.x = 64;
-					trans_p.y = 0;
+					word_p.x = 118;
+					word_p.y = (int)((screen_h - message->w) / 2);
+					trans_p.x = 70;
+					trans_p.y = (int)((screen_h - message_translate->w)/2);
 				}else if(event.key.keysym.sym == 8)
 				{
 					rotate = 270;
-					word_p.x = 320 - 40;
-					word_p.y = 70;
-					trans_p.x = 320 - 64;
-					trans_p.y = 0;
+					word_p.x = screen_w - 118 - 24;
+					word_p.y = (int)((screen_h - message->w) / 2);
+					trans_p.x = screen_w - 70 - 24;
+					trans_p.y = (int)((screen_h - message_translate->w)/2);
 				}
 				else
 				{
 					rotate = 0;
-					word_p.x = 40;
-					word_p.y = 70;
-					trans_p.x = 40;
-					trans_p.y = 94;
+					word_p.x = (int)((screen_w - message->w) / 2);
+					word_p.y = 121;
+					trans_p.x = (int)((screen_w - message_translate->w) / 2);
+					trans_p.y = 70;
 				}
 				message = rotozoomSurface(message,rotate,1,0);
 				message_translate = rotozoomSurface(message_translate,rotate,1,0);
