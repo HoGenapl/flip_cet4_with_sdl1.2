@@ -177,7 +177,7 @@ int fmn()
                 quit = 1;
             }
 			//下一个单词
-            else if ((event.key.keysym.sym == 9 || event.key.keysym.sym == 275 || event.key.keysym.sym == 306) && event.key.type == SDL_KEYDOWN)
+            else if ((event.key.keysym.sym == 8 || event.key.keysym.sym == 9 || event.key.keysym.sym == 275 || event.key.keysym.sym == 306) && event.key.type == SDL_KEYDOWN)
             {
 				//停止播放
 				Mix_HaltMusic();
@@ -223,16 +223,28 @@ int fmn()
                 if(event.key.keysym.sym == 9)
 				{
 					rotate = 90;
-					message = rotozoomSurface(message,rotate,1,0);
-					message_translate = rotozoomSurface(message_translate,rotate,1,0);
+					word_p.x = 40;
+					word_p.y = 70;
 					trans_p.x = 64;
+					trans_p.y = 0;
+				}else if(event.key.keysym.sym == 8)
+				{
+					rotate = 270;
+					word_p.x = 320 - 40;
+					word_p.y = 70;
+					trans_p.x = 320 - 64;
 					trans_p.y = 0;
 				}
 				else
 				{
+					rotate = 0;
+					word_p.x = 40;
+					word_p.y = 70;
 					trans_p.x = 40;
 					trans_p.y = 94;
 				}
+				message = rotozoomSurface(message,rotate,1,0);
+				message_translate = rotozoomSurface(message_translate,rotate,1,0);
 
 	            apply_surface(word_p.x,word_p.y,message,screen,NULL);
 	            apply_surface(trans_p.x,trans_p.y,message_translate,screen,NULL);
