@@ -14,6 +14,8 @@ SDL_Surface* message = NULL;
 SDL_Surface* message_translate = NULL;
 
 Mix_Music* music = NULL;
+//旋转参数
+int rotate = 0;
 int quit = 0;
 const char file_name[] = "cet4.txt";
 FILE *fn;
@@ -22,7 +24,7 @@ SDL_Color color = {180,0,0};
 struct word_position{
     int x;
     int y;
-}word_p = {40,70};
+}word_p = {40,70},trans_p = {40,94};
 
 
 char* itoa(int num,char* str,int radix)
@@ -169,12 +171,13 @@ int fmn()
     {
         while(SDL_PollEvent(&event))
         {
+			
             if(event.type == SDL_QUIT || (event.key.keysym.sym == 27 && event.key.type == SDL_KEYDOWN))
             {
                 quit = 1;
             }
 			//下一个单词
-            else if ((event.key.keysym.sym == 275 || event.key.keysym.sym == 306) && event.key.type == SDL_KEYDOWN)
+            else if ((event.key.keysym.sym == 9 || event.key.keysym.sym == 275 || event.key.keysym.sym == 306) && event.key.type == SDL_KEYDOWN)
             {
 				//停止播放
 				Mix_HaltMusic();
@@ -184,6 +187,19 @@ int fmn()
 				fseek(fn,prt_f_words.prt[r],SEEK_SET);
 				fgets(words_and_trans,100,fn);
 				//printf("words_and_trans:%s\n",words_and_trans);
+				//处理words后可能存在的\r\n
+				int i=0;
+				while(1)
+				{
+					if(words_and_trans[i] == '\r' || words_and_trans[i] == '\n' || words_and_trans[i] == '\0')
+						{
+							printf("changeWords:%c\n",words_and_trans[i]);
+							words_and_trans[i] = '\0';
+							break;	
+						}
+					i++;
+				}
+				
 				tmp_char_p = strchr(words_and_trans,sep);
 				//printf("tmp_char_p:%s\n",tmp_char_p);
 				memmove(words,words_and_trans,tmp_char_p - words_and_trans);
@@ -200,11 +216,26 @@ int fmn()
                 
                 //fscanf(fn, "%s", buff);
                 message = TTF_RenderUTF8_Blended(font,words,color);
+				
                 message_translate = TTF_RenderUTF8_Blended(font,tmp_char_p+1,color);
-                //清空屏幕
+				//清空屏幕
                 SDL_FillRect( screen, &(screen->clip_rect), SDL_MapRGB( screen->format, 0xFF, 0xFF, 0xFF ) );
+                if(event.key.keysym.sym == 9)
+				{
+					rotate = 90;
+					message = rotozoomSurface(message,rotate,1,0);
+					message_translate = rotozoomSurface(message_translate,rotate,1,0);
+					trans_p.x = 64;
+					trans_p.y = 0;
+				}
+				else
+				{
+					trans_p.x = 40;
+					trans_p.y = 94;
+				}
+
 	            apply_surface(word_p.x,word_p.y,message,screen,NULL);
-	            apply_surface(word_p.x,word_p.y + 24,message_translate,screen,NULL);
+	            apply_surface(trans_p.x,trans_p.y,message_translate,screen,NULL);
 	            
 	            SDL_Flip(screen);
 	            //printf("^^^^^^^^^^^^^^^^^\n");
@@ -244,7 +275,7 @@ int main(int argc,char* args[])
         return -1;
     itoa(prt_f_words.n,numjoy,10);
 	message = TTF_RenderUTF8_Blended(font,numjoy,color);
-	message = rotozoomSurface(message,270,1,0);
+	message = rotozoomSurface(message,rotate,1,0);
 	apply_surface(word_p.x,word_p.y,message,screen,NULL);
 	SDL_Flip(screen);
 	printf("start:fmn()\n");
