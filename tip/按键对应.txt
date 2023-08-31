@@ -1,0 +1,16 @@
+event.key.keysym.sym对应的十进制代码
+
+up 273
+down 274
+left 276
+right 275
+A 306
+B 308
+X 32
+Y 304
+SELECT 27
+STAET 13
+侧边关机键 279
+上方亮度键 91
+侧左键 9
+侧右键 8
