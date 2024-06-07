@@ -243,6 +243,8 @@ void random_one()
 }
 int play_and_show()
 {
+				//释放音乐
+				Mix_FreeMusic(music);
 				//停止播放
 				Mix_HaltMusic();
 				
